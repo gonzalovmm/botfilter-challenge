@@ -74,6 +74,12 @@ Decisiones técnicas:
 
 ---
 
+## Preview
+
+![App Preview](./docs/preview.png)
+
+---
+
 ## Nota
 
 Se incluye `applicationId` en el payload del POST ya que la API devuelve error 400 si no se envía, aunque no esté explicitado en la consigna.
