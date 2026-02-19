@@ -1,73 +1,79 @@
-# React + TypeScript + Vite
+# Botfilter Challenge – Nimble Gravity
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mini aplicación en React que:
 
-Currently, two official plugins are available:
+- Obtiene candidato por email
+- Lista posiciones abiertas desde API
+- Permite postular enviando repoUrl
+- Maneja estados de carga y error
+- Incluye tests unitarios
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React + TypeScript
+- Vite
+- Fetch API
+- Vitest + Testing Library
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Instalación
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+La aplicación se ejecuta en:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+http://localhost:5173
+```
+
+---
+
+## Tests
+
+Para ejecutar los tests:
+
+```bash
+npm test
+```
+
+Los tests cubren:
+
+- Validación de email en ChallengePage
+- Validación de formato de repoUrl en JobItem
+- Llamado correcto al servicio applyToJob
+- Manejo de errores en UI
+
+---
+
+## Arquitectura
+
+Estructura organizada por responsabilidades:
+
+```
+src/
+  api/         → Cliente HTTP genérico con manejo centralizado de errores
+  services/    → Acceso a API (candidate, jobs, application)
+  components/  → Componentes UI reutilizables
+  pages/       → Pantallas principales
+  types/       → Definiciones TypeScript
+```
+
+Decisiones técnicas:
+
+- Cliente HTTP reutilizable (`fetchJson`)
+- Manejo centralizado de errores HTTP
+- Tipado fuerte de respuestas y payloads
+- Separación clara entre lógica de red y UI
+- Validaciones de inputs antes de enviar requests
+
+---
+
+## Nota
+
+Se incluye `applicationId` en el payload del POST ya que la API devuelve error 400 si no se envía, aunque no esté explicitado en la consigna.

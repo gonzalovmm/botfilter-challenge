@@ -1,24 +1,23 @@
-export const BASE_URL = "PEGÁ_ACÁ_EL_BASE_URL_DEL_MAIL";
+export const BASE_URL = "https://botfilter-h5ddh6dye8exb7ha.centralus-01.azurewebsites.net";
 
-async function safeReadJson(response: Response) {
+async function readBody(response: Response) {
   const contentType = response.headers.get("content-type") || "";
-  if (contentType.includes("application/json")) {
-    return await response.json();
-  }
-  return null;
+  if (contentType.includes("application/json")) return response.json();
+  return response.text(); // por si viene texto
 }
 
 export async function fetchJson<T>(path: string, options?: RequestInit): Promise<T> {
-  const url = `${BASE_URL}${path}`;
-  const response = await fetch(url, options);
-  const data = await safeReadJson(response);
+  const res = await fetch(`${BASE_URL}${path}`, options);
+  const body: any = await readBody(res);
 
-  if (!response.ok) {
-    const message =
-      (data && (data.message || data.error)) ||
-      `HTTP ${response.status} ${response.statusText}`;
-    throw new Error(message);
+  if (!res.ok) {
+    // La API dice que devuelve mensajes descriptivos: los mostramos
+    const msg =
+      (typeof body === "object" && (body.message || body.error)) ||
+      (typeof body === "string" && body) ||
+      `HTTP ${res.status} ${res.statusText}`;
+    throw new Error(msg);
   }
 
-  return data as T;
+  return body as T;
 }
